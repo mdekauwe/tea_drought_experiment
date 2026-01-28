@@ -61,8 +61,17 @@ m <- lmer(Anet ~ treatment * week + (1 | block) + (1 | cultivar) +
 
 summary(m)
 
+# Analysis of Anet using a linear mixed model showed that drought had a
+# singificant influence on the temporal decline in Anet (treatment × week 
+# interaction: estimate = -0.38, t = -12.04). The main effect of drought was
+# also significant (estimate = 0.59, t = 2.66), indicating that droughted plants
+# stated at a slightly higher baseline Anet before the onset of drought. Week 
+# alone did not have a significant effect (estimate = 0.01, t = 0.64). 
+# Random effects accounted for repeated measures within plants, cultivar 
+# differences, and spatial block variation.
 
-# Cultivar-specific drought response
+
+# Cultivar-specific drought response - random slopes for each cultivar
 m_cultivar <- lmer(Anet ~ treatment * week + (1 + treatment | cultivar) +
                     (1 | block) + (1 | plant_id), data = df_exp)
 
