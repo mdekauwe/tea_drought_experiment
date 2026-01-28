@@ -17,8 +17,10 @@ params <- list(
   n_blocks = 3,        # spatial blocks under rain out shelter
   n_cultivars = 8,     # tea cultivar
   n_reps = 5,          # number of replicate plants per cultivar × treatment × block
-  n_weeks = 6,         # 2 pre, 3 drought, 1 recovery
-  drought_weeks = 3:5, # Define drought timing
+  n_weeks = 6,         # how long is the total experiment
+  drought_weeks = 3:(n_weeks - 1),  # define drought timing relative to 
+  # experiment: 2 weeks pre-drought, 3 weeks 
+  # of drought (3,4,5), 1 week of recovery
   mu = 10,             # baseline Anet (umol m-2 s-1), 8-15 was the range
   
   effect_frac = list(
