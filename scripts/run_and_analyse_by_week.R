@@ -60,7 +60,7 @@ df_exp <- df_exp %>% mutate(week = factor(week))
 # Random effects:
 ## (1 | block) -> accounts for baseline differences between spatial blocks
 ## (1 | cultivar) -> accounts for baseline differences between cultivars (intercepts only)
-## (1 | plant_id)-> accounts for repeated measurements on the same plant
+## (1 | plant_id) -> accounts for repeated measurements on the same plant
 
 m <- lmer(Anet ~ treatment * week + (1 | block) + (1 | cultivar) +
           (1 | plant_id),  data = df_exp)
@@ -78,7 +78,7 @@ summary(m)
 # Random effects:
 ## (1 | block) -> accounts for baseline differences between spatial blocks
 ## (1 + treatment | cultivar) -> allows each cultivar to have its own intercept and drought effect
-## (1 | plant_id)-> accounts for repeated measurements on the same plant
+## (1 | plant_id) -> accounts for repeated measurements on the same plant
 m_cultivar <- lmer(Anet ~ treatment * week + (1 + treatment | cultivar) +
                     (1 | block) + (1 | plant_id), data = df_exp)
 
