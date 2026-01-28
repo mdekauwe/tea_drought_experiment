@@ -46,6 +46,8 @@ out_dir <- "~/Desktop/"
 
 df_exp <- simulate_experiment(params = params, seed = 123,gradual_stress = TRUE)
 
+# Convert week to a factor for per-week effects
+df_exp <- df_exp %>% mutate(week = factor(week))
 
 #############################################
 ## Fit mixed-effects model
