@@ -92,6 +92,7 @@ summary(m_cultivar)
 ## Plot the experiment
 #############################################
 
+# aggregate across all cultivars and all plants
 summary_df <- df_exp %>%
   group_by(week, treatment) %>%
   summarise(
@@ -125,6 +126,46 @@ p <- ggplot(summary_df,
 
 ggsave(
   filename = file.path(out_dir, "Anet_tea_experiment.png"),
+  plot = p, width = 8, height = 6, dpi = 300
+)
+
+print(p)
+
+# group by cultivar
+summary_df <- df_exp %>%
+  group_by(cultivar, week, treatment) %>%
+  summarise(
+    mean_Anet = mean(Anet),
+    se_Anet   = sd(Anet) / sqrt(n()),
+    .groups = "drop"
+  )
+
+p <- ggplot(summary_df,
+            aes(x = week, y = mean_Anet,
+                color = treatment, group = interaction(treatment, cultivar))) +
+  geom_line(size = 1) +
+  geom_point(size = 2) +
+  geom_ribbon(
+    aes(ymin = mean_Anet - se_Anet,
+        ymax = mean_Anet + se_Anet,
+        fill = treatment),
+    alpha = 0.15, color = NA
+  ) +
+  facet_wrap(~cultivar) +  # optional: one panel per cultivar
+  labs(
+    x = "Week",
+    y = expression(A[net]~"("*mu*mol~m^-2~s^-1*")"),
+    color = "Treatment",
+    fill  = "Treatment"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "top",
+    panel.grid.minor = element_blank()
+  )
+
+ggsave(
+  filename = file.path(out_dir, "Anet_tea_experiment_by_cultivar.png"),
   plot = p, width = 8, height = 6, dpi = 300
 )
 
