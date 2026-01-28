@@ -195,23 +195,3 @@ ggsave(
 
 print(p)
 
-#############################################
-## Power analysis
-#############################################
-
-# Power to detect drought × time interaction
-m_ext <- extend(m, along = "plant_id", n = length(unique(df_exp$plant_id)))
-
-powerSim(m_ext, test = fixed("treatment:week", "t"), nsim = 200)
-
-#############################################
-## Block-level power check
-#############################################
-
-block_means <- df_exp %>%
-  group_by(block, treatment, week) %>%
-  summarise(Anet = mean(Anet), .groups = "drop")
-
-m_block <- lmer(Anet ~ treatment * week + (1 | block), data = block_means)
-
-powerSim(m_block, test = fixed("treatment:week", "t"), nsim = 200)

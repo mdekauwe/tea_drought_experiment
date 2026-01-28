@@ -99,6 +99,7 @@ summary(m_cultivar)
 ## Plot the experiment
 #############################################
 
+# aggregate across all cultivars and all plants
 summary_df <- df_exp %>%
   group_by(week, treatment) %>%
   summarise(
@@ -137,23 +138,42 @@ ggsave(
 
 print(p)
 
-#############################################
-## Power analysis
-#############################################
+# group by cultivar
+summary_df <- df_exp %>%
+  group_by(cultivar, week, treatment) %>%
+  summarise(
+    mean_Anet = mean(Anet),
+    se_Anet   = sd(Anet) / sqrt(n()),
+    .groups = "drop"
+  )
 
-# Power to detect drought × time interaction
-m_ext <- extend(m, along = "plant_id", n = length(unique(df_exp$plant_id)))
+p <- ggplot(summary_df,
+            aes(x = week, y = mean_Anet,
+                color = treatment, group = interaction(treatment, cultivar))) +
+  geom_line(size = 1) +
+  geom_point(size = 2) +
+  geom_ribbon(
+    aes(ymin = mean_Anet - se_Anet,
+        ymax = mean_Anet + se_Anet,
+        fill = treatment),
+    alpha = 0.15, color = NA
+  ) +
+  facet_wrap(~cultivar) +  
+  labs(
+    x = "Week",
+    y = expression(A[net]~"("*mu*mol~m^-2~s^-1*")"),
+    color = "Treatment",
+    fill  = "Treatment"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "top",
+    panel.grid.minor = element_blank()
+  )
 
-powerSim(m_ext, test = fixed("treatment:week", "t"), nsim = 200)
+ggsave(
+  filename = file.path(out_dir, "Anet_tea_experiment_by_cultivar.png"),
+  plot = p, width = 8, height = 6, dpi = 300
+)
 
-#############################################
-## Block-level power check
-#############################################
-
-block_means <- df_exp %>%
-  group_by(block, treatment, week) %>%
-  summarise(Anet = mean(Anet), .groups = "drop")
-
-m_block <- lmer(Anet ~ treatment * week + (1 | block), data = block_means)
-
-powerSim(m_block, test = fixed("treatment:week", "t"), nsim = 200)
+print(p)
