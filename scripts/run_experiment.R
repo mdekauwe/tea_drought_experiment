@@ -175,7 +175,7 @@ p <- ggplot(summary_df,
         fill = treatment),
     alpha = 0.15, color = NA
   ) +
-  facet_wrap(~cultivar) +  # optional: one panel per cultivar
+  facet_wrap(~cultivar) +  
   labs(
     x = "Week",
     y = expression(A[net]~"("*mu*mol~m^-2~s^-1*")"),
