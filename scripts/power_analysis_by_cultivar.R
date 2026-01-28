@@ -36,7 +36,7 @@ df$Anet <- rnorm(nrow(df), mu, resid_sd)
 # % drop during drought
 pct_drop <- 20
 
-# Absolute effect (optional)
+# Absolute effect 
 abs_effect <- - (pct_drop / 100) * mu
 
 # Fit model allowing cultivar-specific drought responses

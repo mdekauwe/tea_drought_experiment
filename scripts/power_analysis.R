@@ -30,30 +30,33 @@ df <- merge(df, plants[, c("plant_id","block","cultivar","treatment")],
             by="plant_id")
 
 # Baseline Anet from simulated data
-df$Anet <- rnorm(nrow(df), 10, 1)
-mu <- mean(df$Anet)
+mu <- 10           # baseline
+resid_sd <- 1      # residual SD
+pct_drop <- 20     # drought % drop
 
-# % drop during drought
-pct_drop <- 20
+# Baseline + residual
+df$Anet <- rnorm(nrow(df), mu, resid_sd)
+
+# Apply drought effect during drought weeks
+drought_weeks_vec <- (pre_weeks + 1):(pre_weeks + drought_weeks)
+df$Anet[df$treatment == "drought" & df$week %in% drought_weeks_vec] <- 
+  df$Anet[df$treatment == "drought" & df$week %in% drought_weeks_vec] * (1 - pct_drop/100)
+
+# Absolute effect 
 abs_effect <- - (pct_drop / 100) * mu
 
 # Fit model
 m <- lmer(Anet ~ treatment * week + (1 | block) + (1 | cultivar) + 
-          (1 | plant_id), data = df)
-
-# set expected effect for simulation
-fixef(m)["treatmentdrought:week"] <- abs_effect
-
-# set variance components for simulation using simr assignment
-VarCorr(m)$plant_id[] <- 1.5
-VarCorr(m)$cultivar[] <- 0.8
-VarCorr(m)$block[] <- 0.7
-sigma(m) <- 1.0  # residual
+            (1 | plant_id), data = df)
 
 #
-## Run power simulation
+## Power analysis
 #
-m_ext <- extend(m, along="plant_id", n=200)  
+
+# Extend along plant_id to increase sample size for simulation
+m_ext <- extend(m, along = "plant_id", n = 200)  
+
+# Test overall fixed effect of treatment:drought × week
 power_result <- powerSim(m_ext, test = fixed("treatmentdrought:week", "t"), 
                          nsim = 200)
 print(power_result)
