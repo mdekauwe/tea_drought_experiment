@@ -13,14 +13,22 @@ source("R/simulate_experiment.R")
 
 # Set experiment parameters here
 
+# Define experiment phases
+pre_drought_weeks <- 2
+drought_weeks <- 3
+recovery_weeks <- 1
+
+n_weeks <- pre_drought_weeks + drought_weeks + recovery_weeks
+drought_weeks <- (pre_drought_weeks + 1):(pre_drought_weeks + drought_weeks)
+
 params <- list(
   n_blocks = 3,        # spatial blocks under rain out shelter
   n_cultivars = 8,     # tea cultivar
   n_reps = 5,          # number of replicate plants per cultivar × treatment × block
-  n_weeks = 6,         # how long is the total experiment
-  drought_weeks = 3:(n_weeks - 1),  # define drought timing relative to 
-  # experiment: 2 weeks pre-drought, 3 weeks 
-  # of drought (3,4,5), 1 week of recovery
+  pre_drought_weeks = pre_drought_weeks,
+  drought_weeks = drought_weeks,
+  recovery_weeks = recovery_weeks,
+  n_weeks = n_weeks,
   mu = 10,             # baseline Anet (umol m-2 s-1), 8-15 was the range
   
   effect_frac = list(
