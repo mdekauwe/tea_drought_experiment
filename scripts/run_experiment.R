@@ -44,7 +44,8 @@ out_dir <- "~/Desktop/"
 ## Simulate the experiment
 #############################################
 
-df_exp <- simulate_experiment(params = params, seed = 123,gradual_stress = TRUE)
+df_exp <- simulate_experiment(params = params, seed = 123, 
+                              gradual_stress = TRUE)
 
 
 
