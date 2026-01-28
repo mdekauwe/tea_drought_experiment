@@ -47,11 +47,9 @@ out_dir <- "~/Desktop/"
 df_exp <- simulate_experiment(params = params, seed = 123,gradual_stress = TRUE)
 
 
-#############################################
-## Fit mixed-effects model
-#############################################
+
 #
-## Linear mixed model assuming a common drought response across all cultivars
+## Fit linear mixed model assuming a common drought response across all cultivars
 #
 
 # Fixed effects:
@@ -76,7 +74,7 @@ summary(m)
 # differences, and spatial block variation.
 
 #
-## Linear mixed model allowing cultivar-specific drought responses
+## Fit linear mixed model allowing cultivar-specific drought responses
 #
 
 # Fixed effects:
