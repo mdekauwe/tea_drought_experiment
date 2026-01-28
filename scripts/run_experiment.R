@@ -22,14 +22,14 @@ params <- list(
   mu = 10,             # baseline Anet (umol m-2 s-1), 8-15 was the range
   
   effect_frac = list(
-    drought = 0.15   # 15% reduction during drought
+    drought = 0.2      # 20% reduction during drought
   ),
   
   sd = list(
-    block = 0.7,  # spatial heterogeneity across blocks, umol m-2 s-1
-    cultivar = 0.8,  # genetic differences, umol m-2 s-1
-    plant = 1.5,  # between plant variability, umol m-2 s-1
-    resid = 1.0   # residual / measurement error, umol m-2 s-1
+    block = 0.7,      # spatial heterogeneity across blocks, umol m-2 s-1
+    cultivar = 0.8,   # genetic differences, umol m-2 s-1
+    plant = 1.5,      # between plant variability, umol m-2 s-1
+    resid = 1.0       # residual / measurement error, umol m-2 s-1
   )
 )
 
@@ -62,7 +62,7 @@ m <- lmer(Anet ~ treatment * week + (1 | block) + (1 | cultivar) +
 summary(m)
 
 # Analysis of Anet using a linear mixed model showed that drought had a
-# singificant influence on the temporal decline in Anet (treatment × week 
+# significant influence on the temporal decline in Anet (treatment × week 
 # interaction: estimate = -0.38, t = -12.04). The main effect of drought was
 # also significant (estimate = 0.59, t = 2.66), indicating that droughted plants
 # stated at a slightly higher baseline Anet before the onset of drought. Week 
@@ -76,6 +76,17 @@ m_cultivar <- lmer(Anet ~ treatment * week + (1 + treatment | cultivar) +
                     (1 | block) + (1 | plant_id), data = df_exp)
 
 summary(m_cultivar)
+
+# Analysis of Anet using a linear mixed-effects model with cultivar-specific 
+# treatment responses showed that drought had a significant effect on the 
+# temporal decline of Anet (treatment × week interaction: 
+# estimate = -0.38, t = -12.04). The main effect of drought was also 
+# significant (estimate = 0.59, t = 2.62), indicating that droughted plants 
+# started at a slightly higher baseline Anet before the onset of drought. 
+# Week alone did not have a significant effect (estimate = 0.01, t = 0.64). 
+# Allowing cultivars to vary in their response to drought captured genetic 
+# differences in drought sensitivity, while random effects also accounted for 
+# repeated measures within plants and spatial block variation.
 
 #############################################
 ## Plot the experiment
