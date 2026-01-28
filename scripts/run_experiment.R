@@ -50,12 +50,17 @@ df_exp <- simulate_experiment(params = params, seed = 123,gradual_stress = TRUE)
 #############################################
 ## Fit mixed-effects model
 #############################################
+#
+## Linear mixed model assuming a common drought response across all cultivars
+#
 
-# - treatment × week = drought effect through time
-# - block = spatial heterogeneity
-# - cultivar = genetic differences
-# - plant_id = repeated measures
+# Fixed effects:
+## treatment × week -> captures the average temporal effect of drought
 
+# Random effects:
+## (1 | block) -> accounts for baseline differences between spatial blocks
+## (1 | cultivar) -> accounts for baseline differences between cultivars (intercepts only)
+## (1 | plant_id)-> accounts for repeated measurements on the same plant
 m <- lmer(Anet ~ treatment * week + (1 | block) + (1 | cultivar) +
           (1 | plant_id),  data = df_exp)
 
@@ -70,8 +75,18 @@ summary(m)
 # Random effects accounted for repeated measures within plants, cultivar 
 # differences, and spatial block variation.
 
+#
+## Linear mixed model allowing cultivar-specific drought responses
+#
 
-# Cultivar-specific drought response - random slopes for each cultivar
+# Fixed effects:
+## treatment × week-> captures the average temporal effect of drought
+
+# Random effects:
+## (1 | block) -> accounts for baseline differences between spatial blocks
+## (1 + treatment | cultivar) -> allows each cultivar to have its own intercept and drought effect
+## (1 | plant_id)-> accounts for repeated measurements on the same plant
+
 m_cultivar <- lmer(Anet ~ treatment * week + (1 + treatment | cultivar) +
                     (1 | block) + (1 | plant_id), data = df_exp)
 
