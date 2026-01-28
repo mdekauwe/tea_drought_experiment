@@ -2,9 +2,7 @@ library(lme4)
 library(simr)
 library(dplyr)
 
-# -------------------------------
 # Experimental design
-# -------------------------------
 n_blocks <- 3
 n_cultivars <- 8
 n_reps <- 5
