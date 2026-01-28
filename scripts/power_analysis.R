@@ -37,14 +37,14 @@ mu <- mean(df$Anet)
 pct_drop <- 20
 abs_effect <- - (pct_drop / 100) * mu
 
-# Fit base model
+# Fit model
 m <- lmer(Anet ~ treatment * week + (1 | block) + (1 | cultivar) + 
           (1 | plant_id), data = df)
 
-# Set expected effect for simulation
+# set expected effect for simulation
 fixef(m)["treatmentdrought:week"] <- abs_effect
 
-# Set variance components for simulation using simr assignment
+# set variance components for simulation using simr assignment
 VarCorr(m)$plant_id[] <- 1.5
 VarCorr(m)$cultivar[] <- 0.8
 VarCorr(m)$block[] <- 0.7
@@ -54,6 +54,6 @@ sigma(m) <- 1.0  # residual
 ## Run power simulation
 #
 m_ext <- extend(m, along="plant_id", n=200)  
-power_result <- powerSim(m_ext, test = fixed("treatmentdrought:week", "t"), nsim = 200)
-
+power_result <- powerSim(m_ext, test = fixed("treatmentdrought:week", "t"), 
+                         nsim = 200)
 print(power_result)
