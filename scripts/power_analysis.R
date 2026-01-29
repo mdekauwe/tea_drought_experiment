@@ -38,9 +38,9 @@ pct_drop <- 20     # drought % drop
 df$Anet <- rnorm(nrow(df), mu, resid_sd)
 
 # Apply drought effect during drought weeks
-drought_weeks_vec <- (pre_weeks + 1):(pre_weeks + drought_weeks)
-df$Anet[df$treatment == "drought" & df$week %in% drought_weeks_vec] <- 
-  df$Anet[df$treatment == "drought" & df$week %in% drought_weeks_vec] * (1 - pct_drop/100)
+drought_weeks <- seq(pre_weeks + 1, pre_weeks + drought_weeks)
+is_drought_period <- df$treatment == "drought" & df$week %in% drought_weeks
+df$Anet[is_drought_period] <- df$Anet[is_drought_period] * (1 - pct_drop / 100)
 
 # Absolute effect 
 abs_effect <- - (pct_drop / 100) * mu
