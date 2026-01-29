@@ -46,7 +46,9 @@ df$Anet[is_drought_period] <- df$Anet[is_drought_period] * (1 - pct_drop / 100)
 abs_effect <- - (pct_drop / 100) * mu
 
 # Fit model
-m <- lmer(Anet ~ treatment * week + (1 | block) + (1 | cultivar) + 
+m <- lmer(Anet ~ treatment * week + 
+            (1 | block) + 
+            (1 | cultivar) + 
             (1 | plant_id), data = df)
 
 #

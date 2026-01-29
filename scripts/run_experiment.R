@@ -48,30 +48,23 @@ out_dir <- "~/Desktop/"
 
 
 
-
-
-#############################################
+#
 ## Simulate the experiment
-#############################################
+#
 
 df_exp <- simulate_experiment(params = params, seed = 123, 
                               gradual_stress = TRUE)
 
-
-
 #
-## Fit linear mixed model assuming a common drought response across all cultivars
+## Fit linear mixed model assuming a common drought response across all 
+## cultivars
 #
 
-# Fixed effects:
-## treatment × week -> captures the average temporal effect of drought
-
-# Random effects:
-## (1 | block) -> accounts for baseline differences between spatial blocks
-## (1 | cultivar) -> accounts for baseline differences between cultivars (intercepts only)
-## (1 | plant_id) -> accounts for repeated measurements on the same plant
-m <- lmer(Anet ~ treatment * week + (1 | block) + (1 | cultivar) +
-          (1 | plant_id),  data = df_exp)
+m <- lmer(Anet ~ treatment * week + # (fixed) captures the average temporal effect of drought
+            (1 | block) +    # accounts for baseline differences between spatial blocks
+            (1 | cultivar) + # ccounts for baseline differences between cultivars (intercepts only)
+            (1 | plant_id),  # accounts for repeated measurements on the same plant
+          data = df_exp)
 
 summary(m)
 
@@ -87,17 +80,11 @@ summary(m)
 #
 ## Fit linear mixed model allowing cultivar-specific drought responses
 #
-
-# Fixed effects:
-## treatment × week-> captures the average temporal effect of drought
-
-# Random effects:
-## (1 | block) -> accounts for baseline differences between spatial blocks
-## (1 + treatment | cultivar) -> allows each cultivar to have its own intercept and drought effect
-## (1 | plant_id) -> accounts for repeated measurements on the same plant
-
-m_cultivar <- lmer(Anet ~ treatment * week + (1 + treatment | cultivar) +
-                    (1 | block) + (1 | plant_id), data = df_exp)
+m_cultivar <- lmer(Anet ~ treatment * week +  # captures the average temporal effect of drought
+                     (1 + treatment | cultivar) + # allows each cultivar to have its own intercept and drought effect
+                     (1 | block) +   # accounts for baseline differences between spatial blocks
+                     (1 | plant_id), # accounts for repeated measurements on the same plant
+                   data = df_exp)
 
 summary(m_cultivar)
 
