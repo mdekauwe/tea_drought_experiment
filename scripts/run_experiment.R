@@ -59,10 +59,9 @@ df_exp <- simulate_experiment(params = params, seed = 123,
 ## Fit linear mixed model assuming a common drought response across all 
 ## cultivars
 #
-
 m <- lmer(Anet ~ treatment * week + # (fixed) captures the average temporal effect of drought
             (1 | block) +    # accounts for baseline differences between spatial blocks
-            (1 | cultivar) + # ccounts for baseline differences between cultivars (intercepts only)
+            (1 | cultivar) + # accounts for baseline differences between cultivars (intercepts only)
             (1 | plant_id),  # accounts for repeated measurements on the same plant
           data = df_exp)
 
